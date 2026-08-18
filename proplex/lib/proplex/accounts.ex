@@ -26,6 +26,10 @@ defmodule Proplex.Accounts do
     Repo.get_by(User, email: email)
   end
 
+  def get_user_by_username(username) when is_binary(username) do
+    Repo.get_by(User, username: username)
+  end
+
   @doc """
   Gets a user by email and password.
 
@@ -62,6 +66,14 @@ defmodule Proplex.Accounts do
 
   ## User registration
 
+  def change_user_registration(%User{}=user, attrs \\ %{}) do
+    User.registration_changeset(user, attrs,
+      hash_password: false,
+      validate_unique: false,
+      validate_unique_username: false
+    )
+  end
+
   @doc """
   Registers a user.
 
@@ -76,7 +88,7 @@ defmodule Proplex.Accounts do
   """
   def register_user(attrs) do
     %User{}
-    |> User.email_changeset(attrs)
+    |> User.registration_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -111,6 +123,10 @@ defmodule Proplex.Accounts do
     User.email_changeset(user, attrs, opts)
   end
 
+  def change_user_username(user, attrs \\ %{}, opts \\ []) do
+    User.username_changeset(user, attrs, opts)
+  end
+
   @doc """
   Updates the user email using the given token.
 
@@ -130,6 +146,12 @@ defmodule Proplex.Accounts do
         _ -> {:error, :transaction_aborted}
       end
     end)
+  end
+
+  def update_user_username(user, attrs) do
+    user
+    |> User.username_changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """
