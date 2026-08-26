@@ -5,42 +5,50 @@ defmodule RaffleyWeb.EstimatorLive do
     def mount(_params, _session, socket) do
        socket = assign(socket, tickets: 0, price: 3)
 
-       IO.inspect(socket)
+    #    IO.inspect(socket)
+       IO.inspect(self(), label: "MOUNT")
 
        {:ok, socket}
     #    {:ok, assign(socket, tickets: 0, price: 3)}
     end
 
     # render
-    # def render(assigns) do
-    #     ~H"""
-    #     <div class="estimator">
-    #         <h1>Raffle Estimator</h1>
-    #         <section>
-    #             <div>
-    #                 <%= @tickets %>
-    #             </div>
-    #             @
-    #             <div>
-    #                $ <%= @price %>
-    #             </div>
-    #             =
-    #             <div>
-    #                $ <%= @tickets * @price %>
-    #             </div>
-    #         </section>
-    #     </div>
-    #     """
-    # end
+    def render(assigns) do
+        IO.inspect(self(), label: "RENDER")
+        ~H"""
+        <div class="estimator">
+            <h1>Raffle Estimator</h1>
+            <section>
+                <button phx-click="add" phx-value-quantity="5" >
+                    +
+                </button>
+                <div>
+                    <%= @tickets %>
+                </div>
+                @
+                <div>
+                    $ <%= @price %>
+                </div>
+                =
+                <div>
+                    $ <%= @tickets * @price %>
+                </div>
+            </section>
+        </div>
+        """
+    end
 
     # handle_event
     def handle_event("add", %{"quantity" => quantity}, socket) do
+        IO.inspect(self(), label: "ADD")
         # tickets = socket.assigns.tickets + 1
         # socket = assign(socket, :tickets, tickets)
 
+        # raise "exception"
+
         socket = update(socket, :tickets, &(&1 + String.to_integer(quantity)))
 
-        IO.inspect(socket)
+        # IO.inspect(socket)
 
         {:noreply, socket}
     end
