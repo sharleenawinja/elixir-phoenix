@@ -34,4 +34,14 @@ defmodule RaffleyWeb.EstimatorLive do
     # end
 
     # handle_event
+    def handle_event("add", %{"quantity" => quantity}, socket) do
+        # tickets = socket.assigns.tickets + 1
+        # socket = assign(socket, :tickets, tickets)
+
+        socket = update(socket, :tickets, &(&1 + String.to_integer(quantity)))
+
+        IO.inspect(socket)
+
+        {:noreply, socket}
+    end
 end
