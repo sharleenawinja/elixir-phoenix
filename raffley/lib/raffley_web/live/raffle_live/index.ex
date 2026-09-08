@@ -11,20 +11,22 @@ defmodule RaffleyWeb.RaffleLive.Index do
 
   def render(assigns) do
     ~H"""
-    <div class="raffle-index">
-      <.banner>
-        <.icon name="hero-sparkles-solid" /> Mystrey Raffle Coming Soon!
-        <:details :let={vibe}>
-          To Be Revealed Tomorrow {vibe}
-        </:details>
-        <:details>
-          Any guesses?
-        </:details>
-      </.banner>
-      <div class="raffles">
-        <.raffle_card :for={raffle <- @raffles} raffle={raffle} />
+    <Layouts.app flash={@flash}>
+      <div class="raffle-index">
+        <.banner :if={false}>
+          <.icon name="hero-sparkles-solid" /> Mystrey Raffle Coming Soon!
+          <:details :let={vibe}>
+            To Be Revealed Tomorrow {vibe}
+          </:details>
+          <:details>
+            Any guesses?
+          </:details>
+        </.banner>
+        <div class="raffles">
+          <.raffle_card :for={raffle <- @raffles} raffle={raffle} />
+        </div>
       </div>
-    </div>
+    </Layouts.app>
     """
   end
 
