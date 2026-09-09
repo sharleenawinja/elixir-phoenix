@@ -31,4 +31,16 @@ defmodule Raffley.Raffles do
       }
     ]
   end
+
+  def get_raffle(id) when is_integer(id) do
+    Enum.find(list_raffles(), fn raffle -> raffle.id == id end)
+  end
+
+  def get_raffle(id) when is_binary(id) do
+    get_raffle(String.to_integer(id))
+  end
+
+  def featured_raffles(raffle) do
+    list_raffles() |> List.delete(raffle)
+  end
 end
