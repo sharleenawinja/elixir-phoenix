@@ -41,7 +41,10 @@ defmodule RaffleyWeb.Layouts do
           <img src={~p"/images/raffley-logo.svg"} width="150" />
         </a>
       </div>
-      <div class="flex-none"></div>
+      <div class="flex-none">
+        <.link navigate={~p"/raffles"}>Raffles</.link>
+        <.link navigate={~p"/estimator"}>Estimator</.link>
+      </div>
     </header>
 
     <main class="px-4 py-12 sm:px-6 lg:px-8">

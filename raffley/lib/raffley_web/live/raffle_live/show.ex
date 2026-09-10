@@ -5,6 +5,7 @@ defmodule RaffleyWeb.RaffleLive.Show do
   import RaffleyWeb.CustomComponents
 
   def mount(_params, _session, socket) do
+    IO.inspect(self(), label: "MOUNT")
     # raffle = Raffles.get_raffle(id)
 
     # socket =
@@ -16,6 +17,7 @@ defmodule RaffleyWeb.RaffleLive.Show do
   end
 
   def handle_params(%{"id" => id}, _uri, socket) do
+    IO.inspect(self(), label: "HANDLE PARAMS")
     raffle = Raffles.get_raffle(id)
 
     socket =
@@ -28,6 +30,8 @@ defmodule RaffleyWeb.RaffleLive.Show do
   end
 
   def render(assigns) do
+    IO.inspect(self(), label: "RENDER")
+
     ~H"""
     <Layouts.app flash={@flash}>
       <div class="raffle-show">
@@ -64,7 +68,9 @@ defmodule RaffleyWeb.RaffleLive.Show do
       <h4>Featured Raffles</h4>
       <ul class="raffles">
         <li :for={raffle <- @raffles}>
-          <img src={raffle.image_path} /> {raffle.prize}
+          <.link navigate={~p"/raffles/#{raffle}"}>
+            <img src={raffle.image_path} /> {raffle.prize}
+          </.link>
         </li>
       </ul>
     </section>
