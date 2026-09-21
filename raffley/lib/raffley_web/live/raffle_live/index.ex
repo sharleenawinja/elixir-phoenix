@@ -5,7 +5,13 @@ defmodule RaffleyWeb.RaffleLive.Index do
   import RaffleyWeb.CustomComponents
 
   def mount(_params, _session, socket) do
-    socket = stream(socket, :raffles, Raffles.list_raffles())
+    # form = to_form(%{"q" => "", "status" => "", "sort_by" => ""})
+    # form = to_form(%{})
+
+    socket =
+      socket
+      |> stream(:raffles, Raffles.list_raffles())
+      |> assign(:form, to_form(%{}))
 
     # IO.inspect(socket.assigns.streams.raffles, label: "MOUNT")
 
@@ -20,6 +26,10 @@ defmodule RaffleyWeb.RaffleLive.Index do
 
   def render(assigns) do
     ~H"""
+    <%!-- <pre>
+    <%= inspect(@form, pretty: true) %>
+    <%= inspect(@form[:q], pretty: true) %>
+    </pre> --%>
     <Layouts.app flash={@flash}>
       <div class="raffle-index">
         <.banner :if={false}>
@@ -31,11 +41,34 @@ defmodule RaffleyWeb.RaffleLive.Index do
             Any guesses?
           </:details>
         </.banner>
+
+        <.filter_form form={@form} />
+
         <div class="raffles" id="raffles" phx-update="stream">
           <.raffle_card :for={{dom_id, raffle} <- @streams.raffles} raffle={raffle} id={dom_id} />
         </div>
       </div>
     </Layouts.app>
+    """
+  end
+
+  def filter_form(assigns) do
+    ~H"""
+    <.form for={@form}>
+      <.input field={@form[:q]} placeholder="Search..." autocomplete="off" />
+      <.input
+        type="select"
+        field={@form[:status]}
+        prompt="Status"
+        options={[:upcoming, :open, :closed]}
+      />
+      <.input
+        type="select"
+        field={@form[:sort_by]}
+        prompt="Sort By"
+        options={[:prize, :ticket_price]}
+      />
+    </.form>
     """
   end
 
