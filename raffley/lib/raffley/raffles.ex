@@ -8,6 +8,14 @@ defmodule Raffley.Raffles do
     Repo.all(Raffle)
   end
 
+  def filter_raffles() do
+    Raffle
+    |> where(status: :closed)
+    |> where([r], ilike(r.prize, "%gourmet%"))
+    |> order_by(:prize)
+    |> Repo.all()
+  end
+
   def get_raffle!(id) do
     Repo.get!(Raffle, id)
   end
