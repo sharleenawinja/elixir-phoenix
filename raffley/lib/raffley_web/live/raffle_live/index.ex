@@ -8,6 +8,8 @@ defmodule RaffleyWeb.RaffleLive.Index do
     # form = to_form(%{"q" => "", "status" => "", "sort_by" => ""})
     # form = to_form(%{})
 
+    # IO.inspect(self(), label: "MOUNT")
+
     # socket =
     #   socket
     #   |> stream(:raffles, Raffles.list_raffles())
@@ -25,15 +27,19 @@ defmodule RaffleyWeb.RaffleLive.Index do
   end
 
   def handle_params(params, _uri, socket) do
+    # IO.inspect(self(), label: "HANDLE PARAMS")
+
     socket =
       socket
-      |> stream(:raffles, Raffles.filter_raffles(params))
+      |> stream(:raffles, Raffles.filter_raffles(params), reset: true)
       |> assign(:form, to_form(params))
 
     {:noreply, socket}
   end
 
   def render(assigns) do
+    # IO.inspect(self(), label: "RENDER")
+
     ~H"""
     <%!-- <pre>
     <%= inspect(@form, pretty: true) %>
@@ -86,7 +92,7 @@ defmodule RaffleyWeb.RaffleLive.Index do
           "Price: Low to High": "ticket_price_asc"
         ]}
       />
-      <.link navigate={~p"/raffles"}>
+      <.link patch={~p"/raffles"}>
         Reset
       </.link>
     </.form>
@@ -127,7 +133,7 @@ defmodule RaffleyWeb.RaffleLive.Index do
       |> Map.take(~w(q status sort_by))
       |> Map.reject(fn {_, v} -> v == "" end)
 
-    socket = push_navigate(socket, to: ~p"/raffles?#{params}")
+    socket = push_patch(socket, to: ~p"/raffles?#{params}")
 
     {:noreply, socket}
   end
