@@ -44,6 +44,7 @@ defmodule RaffleyWeb.Layouts do
       <div class="flex-none">
         <.link navigate={~p"/raffles"}>Raffles</.link>
         <.link navigate={~p"/estimator"}>Estimator</.link>
+        <.link navigate={~p"/admin/raffles"}>Admin</.link>
       </div>
     </header>
 
