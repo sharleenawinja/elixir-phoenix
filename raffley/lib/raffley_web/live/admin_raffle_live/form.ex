@@ -4,21 +4,38 @@ defmodule RaffleyWeb.AdminRaffleLive.Form do
   alias Raffley.Admin
   alias Raffley.Raffles.Raffle
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
+    # socket = apply_action(socket, socket.assigns.live_action, params)
+
+    {:ok, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :new, _params) do
     # changeset = Raffle.changeset(%Raffle{}, %{})
-    changeset = Admin.change_raffle(%Raffle{})
+    raffle = %Raffle{}
+    changeset = Admin.change_raffle(raffle)
 
-    socket =
-      socket
-      |> assign(:page_title, "New Raffle")
-      |> assign(:form, to_form(changeset))
+    socket
+    |> assign(:page_title, "New Raffle")
+    |> assign(:form, to_form(changeset))
+    |> assign(:raffle, raffle)
+  end
 
-    {:ok, socket}
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    raffle = Admin.get_raffle!(id)
+
+    changeset = Admin.change_raffle(raffle)
+
+    socket
+    |> assign(:page_title, "Edit Raffle")
+    |> assign(:form, to_form(changeset))
+    |> assign(:raffle, raffle)
   end
 
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
+      <%!-- {inspect(@live_action)} --%>
       <.header>
         {@page_title}
       </.header>
@@ -46,7 +63,7 @@ defmodule RaffleyWeb.AdminRaffleLive.Form do
 
   def handle_event("validate", %{"raffle" => raffle_params}, socket) do
     # changeset = Raffle.changeset(%Raffle{}, raffle_params)
-    changeset = Admin.change_raffle(%Raffle{}, raffle_params)
+    changeset = Admin.change_raffle(socket.assigns.raffle, raffle_params)
 
     socket = assign(socket, :form, to_form(changeset, action: :validate))
 
