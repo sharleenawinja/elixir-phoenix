@@ -38,9 +38,24 @@ defmodule RaffleyWeb.AdminRaffleLive.Index do
           <:action :let={{_dom_id, raffle}}>
             <.link navigate={~p"/admin/raffles/#{raffle}/edit"}>Edit</.link>
           </:action>
+          <:action :let={{_dom_id, raffle}}>
+            <.link phx-click="delete" phx-value-id={raffle.id} data-confirm="Are you sure?">Delete</.link>
+          </:action>
         </.table>
       </div>
     </Layouts.app>
     """
+  end
+
+  def handle_event("delete", %{"id" => id}, socket) do
+    raffle = Admin.get_raffle!(id)
+
+    {:ok, _} = Admin.delete_raffle(raffle)
+
+    # socket = stream_delete(socket, :raffles, raffle)
+
+    # IO.inspect(socket, label: "SOCKET")
+
+    {:noreply, stream_delete(socket, :raffles, raffle)}
   end
 end
