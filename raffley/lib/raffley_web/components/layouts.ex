@@ -41,10 +41,11 @@ defmodule RaffleyWeb.Layouts do
           <img src={~p"/images/raffley-logo.svg"} width="150" />
         </a>
       </div>
-      <div class="flex-none">
+      <div class="flex-none gap-1">
         <.link navigate={~p"/raffles"}>Raffles</.link>
         <.link navigate={~p"/estimator"}>Estimator</.link>
         <.link navigate={~p"/admin/raffles"}>Admin</.link>
+        <.link navigate={~p"/charities"}>Charities</.link>
       </div>
     </header>
 
