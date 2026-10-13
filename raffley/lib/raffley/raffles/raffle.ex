@@ -9,6 +9,8 @@ defmodule Raffley.Raffles.Raffle do
     field :status, Ecto.Enum, values: [:upcoming, :open, :closed], default: :upcoming
     field :image_path, :string, default: "/images/placeholder.jpg"
 
+    belongs_to :charity, Raffley.Charities.Charity
+
     timestamps(type: :utc_datetime)
   end
 
