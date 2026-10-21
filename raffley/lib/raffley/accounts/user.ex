@@ -4,6 +4,7 @@ defmodule Raffley.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :username, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
@@ -25,8 +26,17 @@ defmodule Raffley.Accounts.User do
   """
   def email_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email])
+    |> cast(attrs, [:email, :username])
     |> validate_email(opts)
+    |> validate_username()
+  end
+
+  defp validate_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 2, max: 25)
+    |> unsafe_validate_unique(:username, Raffley.Repo)
+    |> unique_constraint(:username)
   end
 
   defp validate_email(changeset, opts) do

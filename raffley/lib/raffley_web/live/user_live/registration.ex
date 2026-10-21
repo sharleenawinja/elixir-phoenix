@@ -32,6 +32,13 @@ defmodule RaffleyWeb.UserLive.Registration do
             required
             phx-mounted={JS.focus()}
           />
+          <.input
+            field={@form[:username]}
+            label="Username"
+            autocomplete="username"
+            spellcheck="false"
+            required
+          />
 
           <.button phx-disable-with="Creating account..." class="btn btn-primary w-full">
             Create an account
