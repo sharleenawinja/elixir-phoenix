@@ -23,7 +23,7 @@ defmodule RaffleyWeb.Router do
 
     conn = assign(conn, :greeting, greeting)
 
-    # IO.inspect(conn)
+    IO.inspect(conn)
 
     conn
   end
@@ -39,15 +39,6 @@ defmodule RaffleyWeb.Router do
     live "/estimator", EstimatorLive
     live "/raffles", RaffleLive.Index
     live "/raffles/:id", RaffleLive.Show
-
-    live "/admin/raffles", AdminRaffleLive.Index
-    live "/admin/raffles/new", AdminRaffleLive.Form, :new
-    live "/admin/raffles/:id/edit", AdminRaffleLive.Form, :edit
-
-    live "/charities", CharityLive.Index, :index
-    live "/charities/new", CharityLive.Form, :new
-    live "/charities/:id", CharityLive.Show, :show
-    live "/charities/:id/edit", CharityLive.Form, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -85,6 +76,15 @@ defmodule RaffleyWeb.Router do
       on_mount: [{RaffleyWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+
+      live "/admin/raffles", AdminRaffleLive.Index
+      live "/admin/raffles/new", AdminRaffleLive.Form, :new
+      live "/admin/raffles/:id/edit", AdminRaffleLive.Form, :edit
+
+      live "/charities", CharityLive.Index, :index
+      live "/charities/new", CharityLive.Form, :new
+      live "/charities/:id", CharityLive.Show, :show
+      live "/charities/:id/edit", CharityLive.Form, :edit
     end
 
     post "/users/update-password", UserSessionController, :update_password
