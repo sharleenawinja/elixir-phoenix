@@ -76,7 +76,19 @@ defmodule RaffleyWeb.Router do
       on_mount: [{RaffleyWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+    end
 
+    post "/users/update-password", UserSessionController, :update_password
+  end
+
+  scope "/", RaffleyWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_admin]
+
+    live_session :admin,
+      on_mount: [
+        {RaffleyWeb.UserAuth, :require_authenticated},
+        {RaffleyWeb.UserAuth, :ensure_admin}
+      ] do
       live "/admin/raffles", AdminRaffleLive.Index
       live "/admin/raffles/new", AdminRaffleLive.Form, :new
       live "/admin/raffles/:id/edit", AdminRaffleLive.Form, :edit
@@ -86,8 +98,6 @@ defmodule RaffleyWeb.Router do
       live "/charities/:id", CharityLive.Show, :show
       live "/charities/:id/edit", CharityLive.Form, :edit
     end
-
-    post "/users/update-password", UserSessionController, :update_password
   end
 
   scope "/", RaffleyWeb do
